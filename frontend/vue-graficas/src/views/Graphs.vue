@@ -21,7 +21,9 @@
       <Card id="card2">
         <template #title> Opciones </template>
         <template #content>
-          <p>Seleccione un tipo de gráfica:</p>
+          <ProgressSpinner v-if="loadingOptions" />
+        <div v-if="!loadingOptions">
+            <p>Seleccione un tipo de gráfica:</p>
           <Button label="Bar chart" @click="graphType = 'bar'" class="p-button-warning"/>
           <Button label="Horizontal bar chart" @click="graphType = 'horizontalBar'" class="p-button-warning"/>
           <Button label="Pie chart" @click="graphType = 'pie'" class="p-button-warning"/>
@@ -29,9 +31,7 @@
           <hr />
           <p>Seleccione un estado:</p>
           <select v-model="estado">
-            <option selected>Tabasco</option>
-            <option>Veracruz</option>
-            <option>Edo.Mex</option>
+              <option v-for="estado in estadosList" :key="estado"> {{estado}} </option>
           </select>
           <p>Mayor o menor # de vehículos:</p>
           <select v-model="reqOrder2">
@@ -47,8 +47,7 @@
           <hr />
           <p>Seleccione una marca:</p>
           <select v-model="marca">
-            <option selected>BMW</option>
-            <option>NISSAN</option>
+            <option v-for="nomMarca in marcasList" :key="nomMarca"> {{nomMarca}} </option>
           </select>
           <p>Mayor o menor # de vehículos:</p>
           <select v-model="reqOrder">
@@ -69,7 +68,7 @@
 
             <Button label="Marcas con mayor número de vehículos" @click="getProblema('Marcas con mayor número de vehículos', 3)"/>
             <Button label="Colores con mayor número de vehículos" @click="getProblema('Colores con mayor número de vehículos', 4)"/>
-            
+
             <Button label="Año en el que más vehículos se fabricaron" @click="getProblema('Año en el que más vehículos se fabricaron', 6)"/>
             
             <br>
@@ -80,6 +79,7 @@
 
             <Button label="Año en el que menos vehículos se fabricaron" @click="getProblema('Año en el que menos vehículos se fabricaron', 12)" class="p-button-help"/>
           </div>
+        </div>
         </template>
       </Card>
     </div>
@@ -97,6 +97,42 @@ export default {
       reqOrder2:"",
       marca: "",
       loading: false,
+      loadingOptions: false,
+      marcasList: [],
+      estadosList: [
+        "Aguascalientes",
+        "Baja California Norte",
+        "Baja California Sur",
+        "Campeche",
+        "Coahuila de Zaragoza",
+        "Colima",
+        "Chiapas",
+        "Chihuahua",
+        "Distrito Federal",
+        "Durango",
+        "Guanajuato",
+        "Guerrero",
+        "Hidalgo",
+        "Jalisco",
+        "México",
+        "Michoacán de Ocampo",
+        "Morelos",
+        "Nayarit",
+        "Nuevo León",
+        "Oaxaca",
+        "Puebla",
+        "Querétaro de Arteaga",
+        "Quintana Roo",
+        "San Luis Potosí",
+        "Sinaloa",
+        "Sonora",
+        "Tabasco",
+        "Tamaulipas",
+        "Tlaxcala",
+        "Veracruz",
+        "Yucatán",
+        "Zacatecas",
+      ],
       basicData: {
         labels: [
           "January",
@@ -160,6 +196,26 @@ export default {
         });
     },
   },
+  mounted() {
+  this.$nextTick(function () {
+    this.loadingOptions = true;
+    fetch("http://localhost:5000/marcasList")
+        .then((response) => response.json())
+        .then(async (data) => {
+          console.log(await data);
+
+          data.forEach((element) => {
+            this.marcasList.push(element.data);
+          });
+          this.loadingOptions = false;
+        })
+        .catch((error) => {
+          this.loadingOptions = false;
+
+          console.error("There was an error on getting the Brand names!!", error);
+        });
+  })
+}
 };
 </script>
 

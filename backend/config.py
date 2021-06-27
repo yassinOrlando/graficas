@@ -9,6 +9,21 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=DESKTOP-JCTSONC\MSSQLSERVER01;Database=renave_db;Trusted_Connection=yes;')
 #cnxn = pyodbc.connect('DRIVER=sqlServerDb;SERVER=DESKTOP-JCTSONC\MSSQLSERVER01;Trusted_Connection=yes;')
 
+@app.route("/marcasList")
+@cross_origin()
+def marcas():
+    cursor = cnxn.cursor()
+    autos = cursor.execute("""
+    SELECT nombre FROM marcas
+    """).fetchall()
+    autosList = []
+    for auto in autos:
+        autosList.append(
+            {
+                'data': auto[0],
+            }
+        )
+    return jsonify(autosList)
 
 @app.route("/act1")
 @cross_origin()
