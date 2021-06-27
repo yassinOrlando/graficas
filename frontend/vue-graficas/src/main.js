@@ -9,10 +9,15 @@ import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 
 import Chart from "primevue/chart";
+import Card from "primevue/card";
+import ProgressSpinner from 'primevue/progressspinner';
 
 const app = createApp(App);
 app.use(PrimeVue, { ripple: true });
 app.use(router);
+
 app.component("Chart", Chart);
+app.component("Card", Card);
+app.component("ProgressSpinner", ProgressSpinner);
 
 app.mount("#app");
