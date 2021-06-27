@@ -44,10 +44,16 @@
             <option selected>BMW</option>
             <option>NISSAN</option>
           </select>
+          <p>Mayor o menor # de vehículos:</p>
+          <select v-model="reqOrder">
+            <option selected>Mayor</option>
+            <option >Menor</option>
+          </select>
           <br /><br />
           <span>Seleccionaste: {{ marca }}</span>
           <br />
-          <Button v-if="marca != ''" label="Modelos con mayor número de vehículos de esta marca" @click="getProblema('Modelos con mayor número de vehículos de: ' + marca, '5/' + marca )"/>
+          <Button v-if="marca != '' && reqOrder == 'Mayor' " label="Modelos con mayor número de vehículos de esta marca" @click="getProblema('Modelos con mayor número de vehículos de: ' + marca, '5/' + marca )"  class="p-button-secondary" />
+          <Button v-if="marca != '' && reqOrder == 'Menor' " label="Modelos con menor número de vehículos de esta marca" @click="getProblema('Modelos con menor número de vehículos de: ' + marca, '11/' + marca )"  class="p-button-success" />
 
 
           <hr />
@@ -59,8 +65,14 @@
             <Button label="Colores con mayor número de vehículos" @click="getProblema('Colores con mayor número de vehículos', 4)"/>
             <!-- <Button label="Modelos con mayor número de vehículos a revisar" @click="getProblema('Modelos con mayor número de vehículos a revisar', '5/Nissan')"/> -->
             <Button label="Año en el que más vehículos se fabricaron" @click="getProblema('Año en el que más vehículos se fabricaron', 6)"/>
+            
             <br>
-            <Button label="Año en el que más vehículos se fabricaron" @click="getProblema('Año en el que más vehículos se fabricaron', 6)" class="p-button-help"/>
+            <Button label="Estados con menor número de vehículos" @click="getProblema('Estados con menor número de vehículos', 7)" class="p-button-help"/>
+
+            <Button label="Marcas con menor número de vehículos" @click="getProblema('Marcas con menor número de vehículos', 9)" class="p-button-help"/>
+            <Button label="Colores con menor número de vehículos" @click="getProblema('Colores con menor número de vehículos', 10)" class="p-button-help"/>
+
+            <Button label="Año en el que menos vehículos se fabricaron" @click="getProblema('Año en el que menos vehículos se fabricaron', 12)" class="p-button-help"/>
           </div>
         </template>
       </Card>
@@ -75,6 +87,7 @@ export default {
       title: "Datos de ejemplo",
       graphType: "bar",
       estado: "",
+      reqOrder:"",
       marca: "",
       loading: false,
       basicData: {
@@ -150,6 +163,7 @@ button {
 
 #layout {
   display: flex;
+  justify-content: center;
 }
 
 #buttonSet > button,
@@ -162,9 +176,11 @@ button {
 }
 
 #card1 {
-  width: 65% !important;
+  width: 60% !important;
 }
 #card2 {
-  width: 35% !important;
+  width: 30% !important;
+  max-height: 75vh;
+  overflow: scroll;
 }
 </style>

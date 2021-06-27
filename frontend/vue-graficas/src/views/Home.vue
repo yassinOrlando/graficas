@@ -30,6 +30,6 @@ img {
 
 div {
   text-align: center;
-  line-height: 5em;
+  line-height: 3em;
 }
 </style>

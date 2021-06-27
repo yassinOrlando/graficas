@@ -154,7 +154,7 @@ def act7():
     for auto in autos:
         autosList.append(
             {
-                'estado': auto[0],
+                'data': auto[0],
                 'num_autos': auto[1],
             }
         )
@@ -177,7 +177,7 @@ def act9():
     for auto in autos:
         autosList.append(
             {
-                'marca': auto[0],
+                'data': auto[0],
                 'num_autos': auto[1],
             }
         )
@@ -197,13 +197,34 @@ def act10():
     for auto in autos:
         autosList.append(
             {
-                'color': auto[0],
+                'data': auto[0],
                 'num_autos': auto[1],
             }
         )
     return jsonify(autosList)
 
-#   act 11
+@app.route("/act11/<string:marca>")
+@cross_origin()
+def act11(marca):
+    cursor = cnxn.cursor()
+    autos = cursor.execute(f"""
+    Select TOP 10 mo.nombre as 'Modelos más populares de vehiculos' , Count(mo.cve_marcas) 'Cantidad de vehiculos'
+    From modelos as mo
+            Inner join marcas as m on m.cve_marcas=mo.cve_marcas
+            Inner join vehiculos as v on v.cve_modelos=mo.cve_modelos
+    Where   m.nombre='{marca}'
+    Group by mo.nombre
+    Order by Count(mo.cve_modelos) asc
+    """).fetchall()
+    autosList = []
+    for auto in autos:
+        autosList.append(
+            {
+                'data': auto[0],
+                'num_autos': auto[1],
+            }
+        )
+    return jsonify(autosList)
 
 @app.route("/act12") # Revisar
 def act12():
@@ -212,13 +233,13 @@ def act12():
     Select TOP 10 DATENAME(YEAR, fecha_fabricacion) as 'Año en el que más vehículos se fabricaron', count(fecha_fabricacion) as 'Número de vehículos'
     From vehiculos as v
     Group by DATENAME(YEAR, fecha_fabricacion) 
-    Order by DATENAME(YEAR, fecha_fabricacion) asc
+    Order by count(fecha_fabricacion) asc
     """).fetchall()
     autosList = []
     for auto in autos:
         autosList.append(
             {
-                'year': auto[0],
+                'data': auto[0],
                 'num_autos': auto[1],
             }
         )
