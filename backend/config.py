@@ -160,7 +160,29 @@ def act7():
         )
     return jsonify(autosList)
 
-#   Act8
+@app.route("/act8/<string:estado>")
+@cross_origin()
+def act8(estado):
+    cursor = cnxn.cursor()
+    autos = cursor.execute(f"""
+    SELECT  TOP 10 m.nombre 'Municipios con más vehiculos', Count (m.cve_municipios) as 'Cantidad de vehiculos'
+    From municipios as m
+            inner join estados as e on e.cve_estados=m.cve_estados
+            inner join personas as p on p.cve_municipios=m.cve_municipios
+            inner join vehiculos as v on v.cve_personas=p.cve_personas
+    Where   e.nombre='{estado}'
+    group by m.cve_municipios, m.nombre
+    ORDER BY Count (m.cve_municipios) asc
+    """).fetchall()
+    autosList = []
+    for auto in autos:
+        autosList.append(
+            {
+                'data': auto[0],
+                'num_autos': auto[1],
+            }
+        )
+    return jsonify(autosList)
 
 @app.route("/act9")
 def act9():

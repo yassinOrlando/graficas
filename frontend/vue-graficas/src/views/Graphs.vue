@@ -33,10 +33,16 @@
             <option>Veracruz</option>
             <option>Edo.Mex</option>
           </select>
+          <p>Mayor o menor # de vehículos:</p>
+          <select v-model="reqOrder2">
+            <option selected>Mayor</option>
+            <option >Menor</option>
+          </select>
           <br /><br />
           <span>Seleccionaste: {{ estado }}</span>
           <br />
-          <Button v-if="estado != ''" label="Municipios con mayor número de vehículos de este estado" @click="getProblema('Municipios con mayor número de vehículos de: ' + estado, '2/' + estado )"/>
+          <Button v-if="estado != '' && reqOrder2 == 'Mayor' " label="Municipios con mayor número de vehículos de esta marca" @click="getProblema('Municipios con mayor número de vehículos de: ' + estado, '2/' + estado )"  class="p-button-secondary" />
+          <Button v-if="estado != '' && reqOrder2 == 'Menor' " label="Municipios con menor número de vehículos de esta marca" @click="getProblema('Municipios con menor número de vehículos de: ' + estado, '8/' + estado )"  class="p-button-success" />
 
           <hr />
           <p>Seleccione una marca:</p>
@@ -60,10 +66,10 @@
           <p>Seleccione un problema:</p>
           <div id="buttonSet">
             <Button label="Estados con mayor número de vehículos" @click="getProblema('Estados con mayor número de vehículos', 1)"/>
-            <!-- <Button label="Municipios con mayor número de vehículos a revisar" @click="getProblema('Municipios con mayor número de vehículos a revisar', '2/Tabasco')"/> -->
+
             <Button label="Marcas con mayor número de vehículos" @click="getProblema('Marcas con mayor número de vehículos', 3)"/>
             <Button label="Colores con mayor número de vehículos" @click="getProblema('Colores con mayor número de vehículos', 4)"/>
-            <!-- <Button label="Modelos con mayor número de vehículos a revisar" @click="getProblema('Modelos con mayor número de vehículos a revisar', '5/Nissan')"/> -->
+            
             <Button label="Año en el que más vehículos se fabricaron" @click="getProblema('Año en el que más vehículos se fabricaron', 6)"/>
             
             <br>
@@ -88,6 +94,7 @@ export default {
       graphType: "bar",
       estado: "",
       reqOrder:"",
+      reqOrder2:"",
       marca: "",
       loading: false,
       basicData: {
