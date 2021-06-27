@@ -4,7 +4,7 @@
 
     <div id="layout">
       <Card id="card1">
-        <template #title> Advanced Card </template>
+        <template #title> {{ title }} </template>
         <template #content>
           <div>
             <ProgressSpinner v-if="loading" />
@@ -19,7 +19,7 @@
       </Card>
 
       <Card id="card2">
-        <template #title> Options </template>
+        <template #title> Opciones </template>
         <template #content>
           <p>Seleccione un tipo de gráfica:</p>
           <button @click="graphType = 'bar'">Bar chart</button>
@@ -66,12 +66,12 @@
           <hr />
           <p>Seleccione un problema:</p>
           <div id="buttonSet">
-            <button @click="console.log('Problema 1')">Problema 1</button>
-            <button @click="console.log('Problema 2')">Problema 2</button>
-            <button @click="console.log('Problema 3')">Problema 3</button>
-            <button @click="console.log('Problema 4')">Problema 4</button>
-            <button @click="console.log('Problema 5')">Problema 5</button>
-            <button @click="console.log('Problema 6')">Problema 6</button>
+            <button @click="getProblema('Estados con mayor número de vehículos', 1)"> Estados con mayor número de vehículos </button>
+            <button @click="getProblema('Municipios con mayor número de vehículos a revisar', '2/Tabasco')">Problema 2</button>
+            <button @click="getProblema('Marcas con mayor número de vehículos', 3)">Marcas con mayor número de vehículos</button>
+            <button @click="getProblema('Colores con mayor número de vehículos', 4)">Colores con mayor número de vehículos</button>
+            <button @click="getProblema('Modelos con mayor número de vehículos a revisar', '5/Nissan')">Problema 5</button>
+            <button @click="getProblema('Año en el que más vehículos se fabricaron', 6)">Año en el que más vehículos se fabricaron</button>
           </div>
         </template>
       </Card>
@@ -83,6 +83,7 @@
 export default {
   data() {
     return {
+      title: "Datos de ejemplo",
       graphType: "bar",
       estado: "",
       marca: "",
@@ -96,20 +97,59 @@ export default {
           "May",
           "June",
           "July",
-          "July",
-          "July",
-          "July",
+          "July2",
+          "July3",
+          "July4",
         ],
         datasets: [
           {
-            label: "My First dataset",
-            backgroundColor: ['#EC407A','#AB47BC','#42A5F5','#444','#66BB6A','#FFCA28','#26A69A', 'red', 'orange', 'green'],
+            label: "Dataset",
+            backgroundColor: [
+              "#EC407A",
+              "#AB47BC",
+              "#42A5F5",
+              "#444",
+              "#66BB6A",
+              "#FFCA28",
+              "#26A69A",
+              "red",
+              "orange",
+              "green",
+            ],
             data: [65, 59, 80, 81, 56, 55, 40, 12, 56, 87],
           },
         ],
       },
       basicOptions: null,
     };
+  },
+  methods: {
+    getProblema(title, actNum) {
+      this.loading = true;
+      this.title = title;
+
+      fetch("http://localhost:5000/act" + actNum)
+        .then((response) => response.json())
+        .then(async (data) => {
+          console.log(await data);
+          this.basicData["labels"] = [];
+          this.basicData["datasets"][0]["data"] = [];
+
+          data.forEach((element) => {
+            console.log(element);
+            console.log(element["data"]);
+            console.log(element["num_autos"]);
+            this.basicData["labels"].push(element["data"]);
+            this.basicData["datasets"][0]["data"].push(element["num_autos"]);
+          });
+          this.loading = false;
+        })
+        .catch((error) => {
+          this.loading = false;
+
+          console.error("There was an error!", error);
+        });
+    },
   },
 };
 </script>

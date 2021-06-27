@@ -1,13 +1,17 @@
 import pyodbc
 from flask import Flask, jsonify
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 cnxn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};SERVER=DESKTOP-JCTSONC\MSSQLSERVER01;Database=renave_db;Trusted_Connection=yes;')
 #cnxn = pyodbc.connect('DRIVER=sqlServerDb;SERVER=DESKTOP-JCTSONC\MSSQLSERVER01;Trusted_Connection=yes;')
 
 
 @app.route("/act1")
+@cross_origin()
 def act1():
     cursor = cnxn.cursor()
     autos = cursor.execute("""
@@ -22,13 +26,35 @@ def act1():
     for auto in autos:
         autosList.append(
             {
-                'estado': auto[0],
+                'data': auto[0],
                 'num_autos': auto[1],
             }
         )
     return jsonify(autosList)
 
-#Act2
+@app.route("/act2/<string:estado>")
+@cross_origin()
+def act2(estado):
+    cursor = cnxn.cursor()
+    autos = cursor.execute(f"""
+    SELECT  TOP 10 m.nombre 'Municipios con más vehiculos', Count (m.cve_municipios) as 'Cantidad de vehiculos'
+    From municipios as m
+            inner join estados as e on e.cve_estados=m.cve_estados
+            inner join personas as p on p.cve_municipios=m.cve_municipios
+            inner join vehiculos as v on v.cve_personas=p.cve_personas
+    Where   e.nombre='{estado}'
+    group by m.cve_municipios, m.nombre
+    ORDER BY Count (m.cve_municipios) desc
+    """).fetchall()
+    autosList = []
+    for auto in autos:
+        autosList.append(
+            {
+                'data': auto[0],
+                'num_autos': auto[1],
+            }
+        )
+    return jsonify(autosList)
 
 @app.route("/act3")
 def act3():
@@ -45,7 +71,7 @@ def act3():
     for auto in autos:
         autosList.append(
             {
-                'marca': auto[0],
+                'data': auto[0],
                 'num_autos': auto[1],
             }
         )
@@ -65,13 +91,34 @@ def act4():
     for auto in autos:
         autosList.append(
             {
-                'color': auto[0],
+                'data': auto[0],
                 'num_autos': auto[1],
             }
         )
     return jsonify(autosList)
 
-#Act5
+@app.route("/act5/<string:marca>")
+@cross_origin()
+def act5(marca):
+    cursor = cnxn.cursor()
+    autos = cursor.execute(f"""
+    Select TOP 10 mo.nombre as 'Modelos más populares de vehiculos' , Count(mo.cve_marcas) 'Cantidad de vehiculos'
+    From modelos as mo
+            Inner join marcas as m on m.cve_marcas=mo.cve_marcas
+            Inner join vehiculos as v on v.cve_modelos=mo.cve_modelos
+    Where   m.nombre='{marca}'
+    Group by mo.nombre
+    Order by Count(mo.cve_modelos)  desc
+    """).fetchall()
+    autosList = []
+    for auto in autos:
+        autosList.append(
+            {
+                'data': auto[0],
+                'num_autos': auto[1],
+            }
+        )
+    return jsonify(autosList)
 
 @app.route("/act6") # Revisar
 def act6():
@@ -80,13 +127,13 @@ def act6():
     Select TOP 10 DATENAME(YEAR, fecha_fabricacion) as 'Año en el que más vehículos se fabricaron', count(fecha_fabricacion) as 'Número de vehículos'
     From vehiculos as v
     Group by DATENAME(YEAR, fecha_fabricacion) 
-    Order by DATENAME(YEAR, fecha_fabricacion) desc
+    Order by count(fecha_fabricacion) desc
     """).fetchall()
     autosList = []
     for auto in autos:
         autosList.append(
             {
-                'year': auto[0],
+                'data': auto[0],
                 'num_autos': auto[1],
             }
         )
