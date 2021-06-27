@@ -9,6 +9,7 @@ import "primevue/resources/primevue.min.css";
 import "primeicons/primeicons.css";
 
 import Chart from "primevue/chart";
+import Menubar from 'primevue/menubar';
 import Card from "primevue/card";
 import Button from 'primevue/button';
 import ProgressSpinner from 'primevue/progressspinner';
@@ -20,6 +21,7 @@ app.use(router);
 app.component("Chart", Chart);
 app.component("Card", Card);
 app.component("Button", Button);
+app.component("Menubar", Menubar);
 app.component("ProgressSpinner", ProgressSpinner);
 
 app.mount("#app");

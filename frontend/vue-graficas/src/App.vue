@@ -1,10 +1,29 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/graphs">Gráficas</router-link>
-  </div>
-  <router-view/>
+  <Menubar :model="items" />
+  <router-view />
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      items: [
+        {
+          label: "Home",
+          icon: "pi pi-fw pi-home",
+          to: "/"
+        },
+        {
+          label: "Gráficas",
+          icon: "pi pi-fw pi-chart-bar",
+          to: "/graphs"
+        },
+      ],
+    };
+  },
+};
+</script>
+
 
 <style>
 #app {

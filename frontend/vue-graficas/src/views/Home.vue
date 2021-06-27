@@ -1,5 +1,6 @@
 <template>
   <div>
+    <br>
     <img alt="Vue logo" src="../assets/uttab.png" />
 
     <h1>Universidad Tecnológica de Tabasco</h1>

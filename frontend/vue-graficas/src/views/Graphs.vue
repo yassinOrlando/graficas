@@ -41,8 +41,8 @@
           <br /><br />
           <span>Seleccionaste: {{ estado }}</span>
           <br />
-          <Button v-if="estado != '' && reqOrder2 == 'Mayor' " label="Municipios con mayor número de vehículos de esta marca" @click="getProblema('Municipios con mayor número de vehículos de: ' + estado, '2/' + estado )"  class="p-button-secondary" />
-          <Button v-if="estado != '' && reqOrder2 == 'Menor' " label="Municipios con menor número de vehículos de esta marca" @click="getProblema('Municipios con menor número de vehículos de: ' + estado, '8/' + estado )"  class="p-button-success" />
+          <Button v-if="estado != '' && reqOrder2 == 'Mayor' " label="Municipios con mayor número de vehículos de este estado" @click="getProblema('Municipios con mayor número de vehículos de: ' + estado, '2/' + estado )"  class="p-button-secondary" />
+          <Button v-if="estado != '' && reqOrder2 == 'Menor' " label="Municipios con menor número de vehículos de este estado" @click="getProblema('Municipios con menor número de vehículos de: ' + estado, '8/' + estado )"  class="p-button-success" />
 
           <hr />
           <p>Seleccione una marca:</p>
